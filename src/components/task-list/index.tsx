@@ -1,22 +1,21 @@
 import { FC } from "react";
 import { ListGroup } from "react-bootstrap"
-import { Task, TaskInput } from "../../types/api";
+import { useTaskListContext } from "../../contexts/task-list";
 import TaskListItem from './item';
 
-interface TaskListProps {
-  tasks: Task[]
-  deleteTask: (id: number) => void
-  updateTask: (id: number, updatedTask: TaskInput) => void
-}
+interface TaskListProps { }
 
-const TaskList: FC<TaskListProps> = ({ tasks, deleteTask, updateTask }) => {
+const TaskList: FC<TaskListProps> = () => {
+  // Accède aux données distribuées par le contexte
+  const { states } = useTaskListContext();
+
   // Rendu du composant
   return (
     <ListGroup>
       {
-        tasks.map(
+        states.tasks.map(
           task => (
-            <TaskListItem key={task.id} task={task} deleteTask={deleteTask} updateTask={updateTask} />
+            <TaskListItem key={task.id} task={task} />
           )
         )
       }

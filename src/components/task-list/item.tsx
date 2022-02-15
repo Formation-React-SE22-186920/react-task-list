@@ -1,15 +1,16 @@
 import { FC, useState, FormEventHandler } from "react";
 import { ListGroup, Form, Button } from "react-bootstrap";
 import { FaCheck, FaTimes, FaPen, FaTrashAlt } from "react-icons/fa";
-import { Task, TaskInput } from "../../types/api";
+import { useTaskListContext } from "../../contexts/task-list";
+import { Task } from "../../types/api";
 
 interface TaskListItemProps {
   task: Task
-  deleteTask: (id: number) => void
-  updateTask: (id: number, updatedTask: TaskInput) => void
 }
 
-const TaskListItem: FC<TaskListItemProps> = ({ task, deleteTask, updateTask }) => {
+const TaskListItem: FC<TaskListItemProps> = ({ task }) => {
+  // Accède aux données distribuées par le contexte
+  const { actions } = useTaskListContext();
   // État permettant de savoir si l'élément est actuellement en cours de modification
   const [isBeingEdited, setIsBeingEdited] = useState(false);
   // État décrivant le contenu du champ "Description"
@@ -20,7 +21,7 @@ const TaskListItem: FC<TaskListItemProps> = ({ task, deleteTask, updateTask }) =
     // Empêche le rechargement de la page
     event.preventDefault();
     // Déclenche la mise à jour de la tâche
-    updateTask(task.id, { description, done: task.done });
+    actions.updateTask(task.id, { description, done: task.done });
     // Désactive la modification de la tâche
     setIsBeingEdited(false);
   }
@@ -30,7 +31,7 @@ const TaskListItem: FC<TaskListItemProps> = ({ task, deleteTask, updateTask }) =
     <ListGroup.Item className="d-flex justify-content-between">
       <Form.Check
         className="me-2"
-        onChange={(event) => updateTask(task.id, { description: task.description, done: event.target.checked })}
+        onChange={(event) => actions.updateTask(task.id, { description: task.description, done: event.target.checked })}
         checked={task.done}
       />
       {
@@ -73,7 +74,7 @@ const TaskListItem: FC<TaskListItemProps> = ({ task, deleteTask, updateTask }) =
       <Button
         variant="danger"
         size="sm"
-        onClick={() => deleteTask(task.id)}
+        onClick={() => actions.deleteTask(task.id)}
       >
         <FaTrashAlt />
       </Button>

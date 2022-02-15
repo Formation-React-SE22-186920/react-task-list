@@ -1,12 +1,13 @@
 import { FC, FormEventHandler, useState } from "react";
 import { Form, Button } from "react-bootstrap"
+import { useTaskListContext } from "../contexts/task-list";
 import { TaskInput } from "../types/api";
 
-interface AddTaskFormProps {
-  createTask: (newTask: TaskInput) => void
-}
+interface AddTaskFormProps { }
 
-const AddTaskForm: FC<AddTaskFormProps> = ({ createTask }) => {
+const AddTaskForm: FC<AddTaskFormProps> = () => {
+  // Accède aux données distribuées par le contexte
+  const { actions } = useTaskListContext();
   // État décrivant le contenu du champ "Description de la nouvelle tâche"
   const [description, setDescription] = useState('');
 
@@ -20,7 +21,7 @@ const AddTaskForm: FC<AddTaskFormProps> = ({ createTask }) => {
       done: false,
     };
     // Déclenche la création d'une nouvelle tâche
-    createTask(newTask);
+    actions.createTask(newTask);
     // Vide le formulaire
     setDescription('');    
   }

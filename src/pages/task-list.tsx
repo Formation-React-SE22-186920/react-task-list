@@ -1,12 +1,12 @@
 import { Container } from "react-bootstrap";
 import AddTaskForm from "../components/add-task-form";
 import TaskList from "../components/task-list";
-import useTaskList from "../hooks/task-list";
+import { TaskListContextProvider, useTaskListContext } from "../contexts/task-list";
 
-const TaskListPage = () => {
-  // Récupère une liste de tâches initialisée automatiquement depuis l'API
-  const { states, actions } = useTaskList();
-  
+const TaskListPageContent = () => {
+  // Accède aux données distribuées par le contexte
+  const { states } = useTaskListContext();
+
   // Si la requête n'a pas encore répondu, affiche un message "Chargement…"
   if (states.tasks.length === 0) {
     return <div>Loading...</div>;
@@ -18,11 +18,20 @@ const TaskListPage = () => {
       <h1>Liste des tâches</h1>
 
       {/* Liste des tâches */}
-      <TaskList tasks={states.tasks} deleteTask={actions.deleteTask} updateTask={actions.updateTask} />
+      <TaskList />
 
       {/* Formulaire de création de tâche */}
-      <AddTaskForm createTask={actions.createTask} />
+      <AddTaskForm />
     </Container>
+  );  
+}
+
+const TaskListPage = () => {
+  // Rendu du composant
+  return (
+    <TaskListContextProvider>
+      <TaskListPageContent />
+    </TaskListContextProvider>
   );  
 }
 
