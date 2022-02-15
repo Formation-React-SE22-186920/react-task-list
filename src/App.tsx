@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import './App.css';
+import { Container, ListGroup } from 'react-bootstrap';
 import { Task } from './types/api';
 
 function App() {
@@ -28,17 +28,20 @@ function App() {
 
   // Rendu du composant
   return (
-    <ul>
-      {
-        tasks.map(
-          task => (
-            <li key={task.id}>
-              {task.description}
-            </li>
+    <Container>
+      <h1>Liste des tâches</h1>
+      <ListGroup>
+        {
+          tasks.map(
+            task => (
+              <ListGroup.Item key={task.id}>
+                {task.description}
+              </ListGroup.Item>
+            )
           )
-        )
-      }
-    </ul>
+        }
+      </ListGroup>
+    </Container>
   );
 }
 
