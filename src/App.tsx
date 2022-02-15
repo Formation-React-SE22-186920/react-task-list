@@ -28,6 +28,11 @@ const TaskListItem: FC<TaskListItemProps> = ({ task, deleteTask, updateTask }) =
   // Rendu du composant
   return (
     <ListGroup.Item key={task.id} className="d-flex justify-content-between">
+      <Form.Check
+        className="me-2"
+        onChange={(event) => updateTask(task.id, { description: task.description, done: event.target.checked })}
+        checked={task.done}
+      />
       {
         isBeingEdited ?
           <div className="d-flex flex-grow-1">
