@@ -1,6 +1,7 @@
 import { FormEventHandler, useEffect, useState } from 'react';
 import { Button, Container, Form, ListGroup } from 'react-bootstrap';
 import { Task } from './types/api';
+import { FaTrashAlt } from 'react-icons/fa';
 
 function App() {
   // État permettant de stocker la liste de toutes les tâches existantes
@@ -42,10 +43,20 @@ function App() {
     })
     // Dès que la requête a répondu, interprète le contenu de la réponse en JSON
     .then(response => response.json())
-    // Dès que l'interprétation du contenu est terminée,
+    // Dès que l'interprétation du contenu est terminée, ajoute le nouvel objet créé à la liste des tâches existantes
     .then( (data: Task) => setTasks([ ...tasks, data ]));
     // Vide le formulaire
     setDescription('');
+  }
+
+  // Crée une fonction permettant de supprimer une tâche existante
+  const deleteTask = (id: number) => {
+    // Envoie une requête HTTP à l'API permettant de supprimer un enregistrement existant
+    fetch(`http://localhost:8000/tasks/${id}`, {
+      method: 'DELETE',
+    })
+    // Dès que la requête a répondu, retire l'élément supprimé de la liste des tâches existantes
+    .then(response => setTasks(tasks.filter( task => task.id !== id )));
   }
 
   // Si la requête n'a pas encore répondu, affiche un message "Chargement…"
@@ -61,8 +72,17 @@ function App() {
         {
           tasks.map(
             task => (
-              <ListGroup.Item key={task.id}>
-                {task.description}
+              <ListGroup.Item key={task.id} className="d-flex justify-content-between">
+                <div>
+                  {task.description}
+                </div>
+                <Button
+                  variant="danger"
+                  size="sm"
+                  onClick={() => deleteTask(task.id)}
+                >
+                  <FaTrashAlt />
+                </Button>
               </ListGroup.Item>
             )
           )
